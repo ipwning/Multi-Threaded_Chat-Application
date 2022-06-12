@@ -50,6 +50,7 @@ int main(int argc, const char* argv[]) {
     int status;
     setup();                            // Call setvbuf for all standard file.
     signal(SIGABRT, abortHdlr);
+    signal(SIGINT, interruptHdlr);
     assert(!validateArgv(argc, argv));  // If does not fit argument, occured assert.
     ip = getIP(argv);
     port = getPort(argv);
