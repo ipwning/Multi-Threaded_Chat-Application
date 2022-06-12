@@ -33,6 +33,14 @@ void abortHdlr(int sig) {
     exit(-1);
 }
 
+void interruptHdlr(int sig) {
+    if (FD && L) {
+        sendMsg(FD, "QUIT\n");
+        close(FD);
+    }
+    exit(sig);
+}
+
 int main(int argc, const char* argv[]) {
     const char* ip;
     int port;
