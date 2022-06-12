@@ -5,8 +5,8 @@ client CLIENTS[CLIENT_MAX] = {0, };
 sender SENDER;
 extern int SOCKFD;
 
-void *sendFunc(void *);
-void *recvFunc(void *);
+void *sendRoutine(void *);
+void *recvRoutine(void *);
 
 void exitHdlr(int sig) {
     pthread_mutex_lock(&mutex_lock);
@@ -31,7 +31,7 @@ int main(int argc, const char *argv[]) {
     signal(SIGABRT, exitHdlr);
     signal(SIGINT, exitHdlr);
     port = getPort(argc, argv);     // Get port number.
-    err = pthread_create(&sendThread, NULL, sendFunc, NULL);
+    err = pthread_create(&sendThread, NULL, sendRoutine, NULL);
     if(err) {
         puts("Error creating thread");
         return 0;
@@ -45,7 +45,7 @@ int main(int argc, const char *argv[]) {
                 CLIENTS[i].fd = fd;
                 memset(&recvThread[i], 0, sizeof(pthread_t));
                 pthread_mutex_unlock(&mutex_lock);
-                err = pthread_create(&recvThread[i], NULL, recvFunc, (void*)i);
+                err = pthread_create(&recvThread[i], NULL, recvRoutine, (void*)i);
                 if(err) {
                     puts("Error creating thread");
                     return 0;
@@ -55,7 +55,7 @@ int main(int argc, const char *argv[]) {
     }
 }
 
-void *sendFunc(void *a) {
+void *sendRoutine(void *a) {
     while(1) {
         if(SENDER.used) {
             for(int i = 0; i < CLIENT_MAX; ++i) {
@@ -77,7 +77,7 @@ void *sendFunc(void *a) {
     }
 }
 
-void *recvFunc(void *arg) {
+void *recvRoutine(void *arg) {
     _QWORD idx = (_QWORD)arg;
     char *msg;
     int l;
