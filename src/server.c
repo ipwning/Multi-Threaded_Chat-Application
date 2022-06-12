@@ -58,16 +58,23 @@ int main(int argc, const char *argv[]) {
 void *sendRoutine(void *a) {
     while(1) {
         if(SENDER.used) {
+            _BYTE isDisconnect = !strcmp(SENDER.buf, DISCONNECT_STR);
             for(int i = 0; i < CLIENT_MAX; ++i) {
                 pthread_mutex_lock(&mutex_lock);
                 if(CLIENTS[i].isOpend && CLIENTS[i].fd != SENDER.fd) {
-                    sendMsg(CLIENTS[i].fd, SENDER.name);
-                    sendMsg(CLIENTS[i].fd, ": ");
-                    sendMsg(CLIENTS[i].fd, SENDER.buf);
+                    if(isDisconnect) {
+                        sendMsg(CLIENTS[i].fd, "[");
+                        sendMsg(CLIENTS[i].fd, SENDER.name);
+                        sendMsg(CLIENTS[i].fd, SENDER.buf);
+                    } else {
+                        sendMsg(CLIENTS[i].fd, SENDER.name);
+                        sendMsg(CLIENTS[i].fd, ": ");
+                        sendMsg(CLIENTS[i].fd, SENDER.buf);
+                    }
                 }
                 pthread_mutex_unlock(&mutex_lock);
             }
-            printf("%s: %s", SENDER.name, SENDER.buf);
+            printf(isDisconnect ? "[%s%s":"%s: %s", SENDER.name, SENDER.buf);
             free(SENDER.name);
             free(SENDER.buf);
             SENDER.name = NULL;
@@ -102,7 +109,7 @@ void *recvRoutine(void *arg) {
             pthread_mutex_lock(&mutex_lock);
             SENDER.name = strdup(CLIENTS[idx].name);
             if(!strcmp(msg, "QUIT\n")) {  
-                SENDER.buf = strdup(" is disconnected.\n");
+                SENDER.buf = strdup(DISCONNECT_STR);
                 CLIENTS[idx].isOpend = 0;
                 free(CLIENTS[idx].name);
                 CLIENTS[idx].name = NULL;
