@@ -177,7 +177,7 @@ client구조체는 각각 연결될 5개의 클라이언트 정보를 저장하�
 client에서 사용되는 함수들을 미리 선언해놨다.
 #### include/client.c
 ##### int validateArgv(int argc, const char* argv[])
-![s_validator](./img/client_validator.png)
+![c_validator](./img/client_validator.png)
 <br>
 
 앞서 설명한 server의 validator의 모든 루틴과 거의 유사하다. 자세한 설명은 생략한다.
