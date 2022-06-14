@@ -189,7 +189,7 @@ client에서 사용되는 함수들을 미리 선언해놨다.
 넘겨받은 인자를 함수 기능에 알맞게, 값을 반환하도록 구현되어있다.
 
 ##### int connectSocket(const char* ip, int port)
-![c_connectSocket](./img/client_connectSocket)
+![c_connectSocket](./img/client_connectSocket.png)
 <br>
 
 먼저 addr의 `family`를 설정하고, `inet_pton` API를 통해 addr에 IP 주소를 삽입한다.
@@ -235,7 +235,8 @@ sendThread가 연결 종료되었다면, recvThread도 강제로 종료시키고
 
 connection이 성공할 경우, (3-way handshake) 서버는 클라이언트의 정보를 출력하고 대화를 중개한다.
 각 클라이언트 역시 새로 연결된 유저의 연결을 확인할 수 있고, 각자 연결 이후 대화를 진행할 수 있다.
-![escape]](./img/escape_screenshot.png)
+
+![escape](./img/escape_screenshot.png)
 <br>
 
 `QUIT`를 입력하자 종료되는 것을 확인할 수 있다.
